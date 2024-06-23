@@ -1,26 +1,25 @@
-var Vorpal = require('../');
-var should = require('should');
+import Vorpal from '../lib/vorpal.js';
+import should from 'should';
+import assert from 'assert';
 
-var vorpal = new Vorpal();
+const vorpal = new Vorpal();
 
-require('assert');
-
-describe('vorpal', function () {
-  describe('constructor', function () {
-    it('should exist and be a function', function () {
+describe('vorpal', () => {
+  describe('constructor', () => {
+    it('should exist and be a function', () => {
       should.exist(Vorpal);
       Vorpal.should.be.type('function');
     });
   });
 
-  describe('.parse', function () {
-    it('should exist and be a function', function () {
+  describe('.parse', () => {
+    it('should exist and be a function', () => {
       should.exist(vorpal.parse);
       vorpal.parse.should.be.type('function');
     });
 
-    it('should expose minimist', function () {
-      var result = vorpal.parse(['a', 'b', 'foo', 'bar', '-r'], {use: 'minimist'});
+    it('should expose minimist', () => {
+      const result = vorpal.parse([ 'a', 'b', 'foo', 'bar', '-r' ], { use: 'minimist' });
       result.r.should.be.true;
       (result._.indexOf('foo') > -1).should.be.true;
       (result._.indexOf('bar') > -1).should.be.true;
@@ -28,25 +27,24 @@ describe('vorpal', function () {
     });
   });
 
-  describe('mode context', function () {
-    it('parent should have the same context in init and action', function (done) {
-      var vorpal = Vorpal();
-      var initCtx;
+  describe('mode context', () => {
+    it('parent should have the same context in init and action', (done) => {
+      const vorpal = new Vorpal();
+      let initCtx;
       vorpal
         .mode('ooga')
         .init(function (args, cb) {
           initCtx = this.parent;
-          cb()
+          cb();
         })
         .action(function (args, cb) {
-          this.parent.should.equal(initCtx)
-          cb()
-          done()
+          this.parent.should.equal(initCtx);
+          cb();
+          done();
         });
-      vorpal.exec('ooga')
-        .then(function () {
-          vorpal.exec('booga')
-        });
+      vorpal.exec('ooga').then(() => {
+        vorpal.exec('booga');
+      })
     });
   });
 });

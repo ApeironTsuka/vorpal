@@ -1,45 +1,36 @@
 'use strict';
 
-var Vorpal = require('../');
-var commands = require('./util/server');
-var BlueBirdPromise = require('bluebird');
-var fs = require('fs');
+import Vorpal from '../lib/vorpal.js';
+import commands from './util/server.js';
+import BlueBirdPromise from 'bluebird';
+import fs from 'node:fs';
+import intercept from '../lib/intercept.js';
+import assert from 'assert';
+import should from 'should';
 
-var intercept = require('../dist/intercept');
-var stdout = '';
-var umute;
-var mute = function () {
-  unmute = intercept(function (str) {
-    stdout += str;
-    return '';
-  });
-}
+const vorpal = new Vorpal();
 
-require('assert');
-require('should');
+let _all = '',
+    _stdout = '',
+    _excess = '';
 
-var vorpal = new Vorpal();
-var _all = '';
-var _stdout = '';
-var _excess = '';
-
-var onStdout = function (str) {
+let onStdout = (str) => {
   _stdout += str;
   _all += str;
   return '';
 };
 
-var stdout = function () {
-  var out = _stdout;
+const stdout = () => {
+  const out = _stdout;
   _stdout = '';
   return String(out || '');
 };
 
-describe('integration tests:', function () {
-  describe('vorpal', function () {
-    it('should overwrite duplicate commands', function (done) {
-      var arr = ['a', 'b', 'c'];
-      arr.forEach(function (item) {
+describe('integration tests:', () => {
+  describe('vorpal', () => {
+    it('should overwrite duplicate commands', (done) => {
+      const arr = [ 'a', 'b', 'c' ];
+      arr.forEach((item) => {
         vorpal
           .command('overwritten', 'This command gets overwritten.')
           .action(function (args, cb) {
@@ -63,7 +54,7 @@ describe('integration tests:', function () {
       });
     });
 
-    it('should register and execute aliases', function (done) {
+    it('should register and execute aliases', (done) => {
       vorpal
         .command('i go by other names', 'This command has many aliases.')
         .alias('donald trump')
@@ -72,8 +63,8 @@ describe('integration tests:', function () {
           cb(undefined, 'You have found me.');
         });
 
-      var ctr = 0;
-      var arr = ['donald trump', 'sinterclaus', 'linus torvalds', 'nan nan nan nan nan nan nan watman!'];
+      let ctr = 0,
+          arr = [ 'donald trump', 'sinterclaus', 'linus torvalds', 'nan nan nan nan nan nan nan watman!' ];
       function go() {
         if (arr[ctr]) {
           vorpal.exec(arr[ctr], function (err, data) {
@@ -91,8 +82,8 @@ describe('integration tests:', function () {
       go();
     });
 
-    it('should fail on duplicate alias', function (done) {
-      (function () {
+    it('should fail on duplicate alias', (done) => {
+      (() => {
         vorpal
           .command('This command should crash!', 'Any moment now...')
           .alias('Oh no!')
@@ -102,13 +93,13 @@ describe('integration tests:', function () {
       done();
     });
 
-    it('should validate arguments', function (done) {
-      var errorThrown = new Error('Invalid Argument');
+    it('should validate arguments', (done) => {
+      const errorThrown = new Error('Invalid Argument');
       vorpal
         .command('validate-me [arg]', 'This command only allows argument "valid"')
         .validate(function (args) {
           this.checkInstance = 'this is the instance';
-          if (!args || args.arg !== 'valid') {
+          if ((!args) || (args.arg !== 'valid')) {
             throw errorThrown;
           }
         })
@@ -127,294 +118,291 @@ describe('integration tests:', function () {
     });
   });
 
-  describe('vorpal execution', function () {
-    before('preparation', function () {
+  describe('vorpal execution', () => {
+    before('preparation', () => {
       vorpal.pipe(onStdout).use(commands);
     });
 
-    afterEach(function () {
+    afterEach(() => {
       _excess += stdout();
     });
 
-    var exec = function (cmd, done, cb) {
-      vorpal.exec(cmd).then(function (data) {
+    const exec = function (cmd, done, cb) {
+      vorpal.exec(cmd).then((data) => {
         cb(undefined, data);
-      }).catch(function (err) {
+      }).catch((err) => {
         console.log(err);
         done(err);
       });
     };
 
-    describe('promise execution', function () {
-      it('should not fail', function (done) {
-        vorpal.exec('fail me not').then(function () {
+    describe('promise execution', () => {
+      it('should not fail', (done) => {
+        vorpal.exec('fail me not').then(() => {
           true.should.be.true; done();
-        }).catch(function (err) {
+        }).catch((err) => {
           console.log(stdout());
           console.log('b', err.stack);
           true.should.not.be.true; done(err);
         });
       });
 
-      it('should fail', function (done) {
-        vorpal.exec('fail me yes').then(function () {
+      it('should fail', (done) => {
+        vorpal.exec('fail me yes').then(() => {
           true.should.not.be.true; done();
-        }).catch(function () {
+        }).catch(() => {
           true.should.be.true; done();
         });
       });
     });
 
-    describe('command execution', function () {
-      it('should execute a simple command', function (done) {
-        exec('fuzzy', done, function (err) {
+    describe('command execution', () => {
+      it('should execute a simple command', (done) => {
+        exec('fuzzy', done, (err) => {
           stdout().should.equal('wuzzy');
           done(err);
         });
       });
 
-      it('should execute help', function (done) {
-        exec('help', done, function (err) {
+      it('should execute help', (done) => {
+        exec('help', done, (err) => {
           String(stdout()).toLowerCase().should.containEql('help');
           done(err);
         });
       });
 
-      it('should chain two async commands', function (done) {
-        vorpal.exec('foo').then(function () {
+      it('should chain two async commands', (done) => {
+        vorpal.exec('foo').then(() => {
           stdout().should.equal('bar');
           return vorpal.exec('fuzzy');
-        }).then(function () {
+        }).then(() => {
           stdout().should.equal('wuzzy');
           done();
-        }).catch(function (err) {
+        }).catch((err) => {
           (err === undefined).should.be.true;
           done(err);
         });
       });
 
-      it('should execute a two-word-deep command', function (done) {
-        exec('deep command arg', done, function (err) {
+      it('should execute a two-word-deep command', (done) => {
+        exec('deep command arg', done, (err) => {
           stdout().should.equal('arg');
           done(err);
         });
       });
 
-      it('should execute a three-word-deep command', function (done) {
-        exec('very deep command arg', done, function (err) {
+      it('should execute a three-word-deep command', (done) => {
+        exec('very deep command arg', done, (err) => {
           stdout().should.equal('arg');
           done(err);
         });
       });
 
       // This has ... promise ... problems.
-      it.skip('should execute 50 async commands in sync', function (done) {
+      /*it.skip('should execute 50 async commands in sync', (done) => {
         this.timeout(4000);
-        var dones = 0;
-        var result = '';
-        var should = '';
-        var total = 50;
-        var handler = function () {
+        let dones = 0,
+            result = '',
+            should = '',
+            total = 50;
+        const handler = () => {
           dones++;
           if (dones === (total - 1)) {
             result.should.equal(should);
             done();
           }
         };
-        var hnFn = function () {
+        const hnFn = () => {
           result += stdout();
           handler();
         };
-        var cFn = function (err) {
+        const cFn = (err) => {
           done(err);
         };
-        for (var i = 1; i < total; ++i) {
+        for (let i = 1; i < total; ++i) {
           should += i;
           vorpal.exec('count ' + i).then(hnFn).catch(cFn);
         }
-      });
+      });*/
     });
 
-    describe('inquirer prompt', function(){
-      var parent = Vorpal();
+    describe('inquirer prompt', () => {
+      const parent = new Vorpal();
 
-      beforeEach(function(){
+      beforeEach(() => {
         // attach a parent so the prompt will run
          vorpal.ui.attach(parent);
       });
 
-      afterEach(function(){
+      afterEach(() => {
         vorpal.ui.detach(parent);
       });
 
-      it('should show the default value', function(done){
-        var execPromise = vorpal.exec('prompt default myawesomeproject');
-
+      it('should show the default value', (done) => {
+        const execPromise = vorpal.exec('prompt default myawesomeproject');
         vorpal.ui.inquirerStdout.join('\n').should.containEql('(myawesomeproject)');
-
         execPromise
-          .then(function (s) {
+          .then((s) => {
             s.project.should.equal('myawesomeproject');
             // stdout should have cleared once the prompt is finished
             vorpal.ui.inquirerStdout.join('\n').should.not.containEql('(myawesomeproject)');
             done();
           })
-          .catch(function (err) {
+          .catch((err) => {
             console.log(stdout());
             console.log('b', err.stack);
             true.should.not.be.true;
             done(err);
           });
-
         // submit the default
         vorpal.ui.submit();
       });
     });
 
-    describe('synchronous execution', function () {
-      it('should execute a sync command', function () {
-        var result = vorpal.execSync('sync');
+    describe('synchronous execution', () => {
+      it('should execute a sync command', () => {
+        const result = vorpal.execSync('sync');
         result.should.equal('no args were passed');
       });
 
-      it('should execute a sync command with args', function () {
-        var result = vorpal.execSync('sync foobar');
+      it('should execute a sync command with args', () => {
+        const result = vorpal.execSync('sync foobar');
         result.should.equal('you said foobar');
       });
 
-      it('should fail silently', function () {
-        var result = vorpal.execSync('sync throwme');
+      it('should fail silently', () => {
+        const result = vorpal.execSync('sync throwme');
         result.message.should.equal('You said so...');
       });
 
-      it('should fail loudly if you tell it to', function () {
-        (function () {
+      it('should fail loudly if you tell it to', () => {
+        (() => {
           vorpal.execSync('sync throwme', {fatal: true});
         }).should.throw();
       });
     });
 
-    describe('.command.help', function () {
-      it('should execute a custom help command.', function (done) {
-        exec('custom-help --help', done, function (err) {
+    describe('.command.help', () => {
+      it('should execute a custom help command.', (done) => {
+        exec('custom-help --help', done, (err) => {
           String(stdout()).should.containEql('This is a custom help output.');
           done(err);
         });
       });
     });
 
-    describe('.command.parse', function () {
-      it('should add on details to an existing command.', function (done) {
-        exec('parse me in-reverse', done, function (err) {
+    describe('.command.parse', () => {
+      it('should add on details to an existing command.', (done) => {
+        exec('parse me in-reverse', done, (err) => {
           String(stdout()).should.containEql('esrever-ni');
           done(err);
         });
       });
     });
 
-    describe('piped commands', function () {
-      it('should execute a piped command', function (done) {
-        exec('say cheese | reverse', done, function () {
+    describe('piped commands', () => {
+      it('should execute a piped command', (done) => {
+        exec('say cheese | reverse', done, () => {
           stdout().should.equal('eseehc');
           done();
         });
       });
 
-      it('should execute a piped command with double quoted pipe character', function (done) {
-        exec('say "cheese|meat" | reverse', done, function () {
+      it('should execute a piped command with double quoted pipe character', (done) => {
+        exec('say "cheese|meat" | reverse', done, () => {
           stdout().should.equal('taem|eseehc');
           done();
         });
       });
 
-      it('should execute a piped command with single quoted pipe character', function (done) {
-        exec('say \'cheese|meat\' | reverse', done, function () {
+      it('should execute a piped command with single quoted pipe character', (done) => {
+        exec('say \'cheese|meat\' | reverse', done, () => {
           stdout().should.equal('taem|eseehc');
           done();
         });
       });
 
-      it('should execute a piped command with angle quoted pipe character', function (done) {
-        exec('say `cheese|meat` | reverse', done, function () {
+      it('should execute a piped command with angle quoted pipe character', (done) => {
+        exec('say `cheese|meat` | reverse', done, () => {
           stdout().should.equal('taem|eseehc');
           done();
         });
       });
 
-      it('should execute multiple piped commands', function (done) {
-        exec('say donut | reverse | reverse | array', done, function () {
+      it('should execute multiple piped commands', (done) => {
+        exec('say donut | reverse | reverse | array', done, () => {
           stdout().should.equal('d,o,n,u,t');
           done();
         });
       });
     });
 
-    describe('command parsing and validation', function () {
-      it('should parse double quoted command option', function (done) {
-        exec('say "Vorpal\'s command parsing is great"', done, function () {
+    describe('command parsing and validation', () => {
+      it('should parse double quoted command option', (done) => {
+        exec('say "Vorpal\'s command parsing is great"', done, () => {
           stdout().should.equal('Vorpal\'s command parsing is great');
           done();
         });
       });
 
-      it('should parse single quoted command option', function (done) {
-        exec('say \'My name is "Vorpal"\', done', done, function () {
+      it('should parse single quoted command option', (done) => {
+        exec('say \'My name is "Vorpal"\', done', done, () => {
           stdout().should.equal('My name is "Vorpal"');
           done();
         });
       });
 
-      it('should parse angle quoted command option', function (done) {
-        exec('say `He\'s "Vorpal"`, done', done, function () {
+      it('should parse angle quoted command option', (done) => {
+        exec('say `He\'s "Vorpal"`, done', done, () => {
           stdout().should.equal('He\'s "Vorpal"');
           done();
         });
       });
 
-      it('should parse double quotes pipe character in command argument', function (done) {
-        exec('say "(vorpal|Vorpal)", done', done, function () {
+      it('should parse double quotes pipe character in command argument', (done) => {
+        exec('say "(vorpal|Vorpal)", done', done, () => {
           stdout().should.equal('(vorpal|Vorpal)');
           done();
         });
       });
 
-      it('should parse single quoted pipe character in command argument', function (done) {
-        exec('say \'(vorpal|Vorpal)\', done', done, function () {
+      it('should parse single quoted pipe character in command argument', (done) => {
+        exec('say \'(vorpal|Vorpal)\', done', done, () => {
           stdout().should.equal('(vorpal|Vorpal)');
           done();
         });
       });
 
-      it('should parse angle quoted pipe character in command argument', function (done) {
-        exec('say `(vorpal|Vorpal)`, done', done, function () {
+      it('should parse angle quoted pipe character in command argument', (done) => {
+        exec('say `(vorpal|Vorpal)`, done', done, () => {
           stdout().should.equal('(vorpal|Vorpal)');
           done();
         });
       });
 
-      it('should execute a command when not passed an optional variable', function (done) {
-        exec('optional', done, function () {
+      it('should execute a command when not passed an optional variable', (done) => {
+        exec('optional', done, () => {
           stdout().should.equal('');
           done();
         });
       });
 
-      it('should understand --no-xxx options', function (done) {
-        exec('i want --no-cheese', done, function () {
+      it('should understand --no-xxx options', (done) => {
+        exec('i want --no-cheese', done, () => {
           stdout().should.equal('false');
           done();
         });
       });
 
-      it('should parse hyphenated options', function (done) {
-        exec('hyphenated-option --dry-run', done, function () {
+      it('should parse hyphenated options', (done) => {
+        exec('hyphenated-option --dry-run', done, () => {
           stdout().should.equal('true');
           done();
         });
       });
 
-      it('should use minimist\'s parse through the .types() method', function (done) {
-        exec('typehappy --numberify 4 -s 5', done, function (err, data) {
+      it('should use minimist\'s parse through the .types() method', (done) => {
+        exec('typehappy --numberify 4 -s 5', done, (err, data) => {
           (err === undefined).should.be.true;
           data.options.numberify.should.equal(4);
           data.options.stringify.should.equal('5');
@@ -422,16 +410,16 @@ describe('integration tests:', function () {
         });
       });
 
-      it('should ignore variadic arguments when not warranted', function (done) {
-        exec('required something with extra something', done, function (err, data) {
+      it('should ignore variadic arguments when not warranted', (done) => {
+        exec('required something with extra something', done, (err, data) => {
           (err === undefined).should.be.true;
           data.arg.should.equal('something');
           done();
         });
       });
 
-      it('should receive variadic arguments as array', function (done) {
-        exec('variadic pepperoni olives pineapple anchovies', done, function (err, data) {
+      it('should receive variadic arguments as array', (done) => {
+        exec('variadic pepperoni olives pineapple anchovies', done, (err, data) => {
           (err === undefined).should.be.true;
           data.pizza.should.equal('pepperoni');
           data.ingredients[0].should.equal('olives');
@@ -441,8 +429,8 @@ describe('integration tests:', function () {
         });
       });
 
-      it('should receive variadic arguments as array when quoted', function (done) {
-        exec('variadic "pepperoni" \'olives\' `pineapple` anchovies', done, function (err, data) {
+      it('should receive variadic arguments as array when quoted', (done) => {
+        exec('variadic "pepperoni" \'olives\' `pineapple` anchovies', done, (err, data) => {
           (err === undefined).should.be.true;
           data.pizza.should.equal('pepperoni');
           data.ingredients[0].should.equal('olives');
@@ -452,8 +440,8 @@ describe('integration tests:', function () {
         });
       });
 
-      it('should accept variadic args as the first arg', function (done) {
-        exec('variadic-pizza olives pineapple anchovies', done, function (err, data) {
+      it('should accept variadic args as the first arg', (done) => {
+        exec('variadic-pizza olives pineapple anchovies', done, (err, data) => {
           (err === undefined).should.be.true;
           data.ingredients[0].should.equal('olives');
           data.ingredients[1].should.equal('pineapple');
@@ -462,10 +450,10 @@ describe('integration tests:', function () {
         });
       });
 
-      context('when first variadic argument has falsy value', function () {
-        context('when variadic argument comes last', function () {
-          it('should parse variadic arguments properly', function (done) {
-            exec('variadic pepperoni 0 1 olives ', done, function (err, data) {
+      context('when first variadic argument has falsy value', () => {
+        context('when variadic argument comes last', () => {
+          it('should parse variadic arguments properly', (done) => {
+            exec('variadic pepperoni 0 1 olives ', done, (err, data) => {
               (err === undefined).should.be.true;
               data.pizza.should.equal('pepperoni');
               data.ingredients[0].should.equal(0);
@@ -475,9 +463,9 @@ describe('integration tests:', function () {
             });
           });
         })
-        context('when one and only argument is variadic', function () {
-          it('should parse variadic arguments properly', function (done) {
-            exec('variadic-pizza 0 1 olives ', done, function (err, data) {
+        context('when one and only argument is variadic', () => {
+          it('should parse variadic arguments properly', (done) => {
+            exec('variadic-pizza 0 1 olives ', done, (err, data) => {
               (err === undefined).should.be.true;
               data.ingredients[0].should.equal(0);
               data.ingredients[1].should.equal(1);
@@ -488,8 +476,8 @@ describe('integration tests:', function () {
         })
       })
 
-      it('should accept a lot of arguments', function (done) {
-        exec('cmd that has a ton of arguments', done, function (err, data) {
+      it('should accept a lot of arguments', (done) => {
+        exec('cmd that has a ton of arguments', done, (err, data) => {
           (err === undefined).should.be.true;
           data.with.should.equal('that');
           data.one.should.equal('has');
@@ -501,79 +489,79 @@ describe('integration tests:', function () {
         });
       });
 
-      it('should show help when not passed a required variable', function (done) {
-        exec('required', done, function () {
+      it('should show help when not passed a required variable', (done) => {
+        exec('required', done, () => {
           (stdout().indexOf('Missing required argument') > -1).should.equal(true);
           done();
         });
       });
 
-      it('should show help when passed an unknown option', function (done) {
-        exec('unknown-option --unknown-opt', done, function () {
+      it('should show help when passed an unknown option', (done) => {
+        exec('unknown-option --unknown-opt', done, () => {
           (stdout().indexOf('Invalid option') > -1).should.equal(true);
           done();
         });
       });
 
-      it('should should execute a command when passed a required variable', function (done) {
-        exec('required foobar', done, function () {
+      it('should should execute a command when passed a required variable', (done) => {
+        exec('required foobar', done, () => {
           stdout().should.equal('foobar');
           done();
         });
       });
 
-      it('should show help when passed an invalid command', function (done) {
-        exec('gooblediguck', done, function () {
+      it('should show help when passed an invalid command', (done) => {
+        exec('gooblediguck', done, () => {
           (stdout().indexOf('Invalid Command. Showing Help:') > -1).should.equal(true);
           done();
         });
       });
 
-      it.skip('should show subcommand help on invalid subcommand', function (done) {
-        exec('very complicated', done, function () {
+      it.skip('should show subcommand help on invalid subcommand', (done) => {
+        exec('very complicated', done, () => {
           stdout().should.containEql('very complicated deep *');
           done();
         });
       });
     });
 
-    describe('mode', function () {
-      it('should enter REPL mode', function (done) {
-        vorpal.exec('repl').then(function () {
+    describe('mode', () => {
+      it('should enter REPL mode', (done) => {
+        vorpal.exec('repl').then(() => {
           stdout().should.containEql('Entering REPL Mode');
           done();
-        }).catch(function (err) {
+        }).catch((err) => {
           done(err);
         });
       });
 
-      it('should execute arbitrary JS', function (done) {
-        vorpal.exec('3*9').then(function (data) {
+      it('should execute arbitrary JS', (done) => {
+        vorpal.exec('3*9').then((data) => {
           (parseFloat(data) || '').should.equal(27);
           parseFloat(stdout()).should.equal(27);
           done();
-        }).catch(function (err) {
+        }).catch((err) => {
           done(err);
         });
       });
 
-      it('should exit REPL mode properly', function (done) {
-        vorpal.exec('exit').then(function () {
+      it('should exit REPL mode properly', (done) => {
+        vorpal.exec('exit').then(() => {
           stdout();
           return vorpal.exec('help');
-        }).then(function () {
+        }).then(() => {
           stdout().should.containEql('exit');
           done();
-        }).catch(function (err) {
+        }).catch((err) => {
           done(err);
         });
       });
     });
 
-    describe('history', function () {
-      var vorpalHistory;
-      var UNIT_TEST_STORAGE_PATH = './.unit_test_cmd_history';
-      before(function () {
+    describe('history', () => {
+      let vorpalHistory;
+      let UNIT_TEST_STORAGE_PATH = './.unit_test_cmd_history';
+      before(() => {
         vorpalHistory = new Vorpal();
         vorpalHistory.historyStoragePath(UNIT_TEST_STORAGE_PATH);
         vorpalHistory.history('unit_test');
@@ -581,24 +569,24 @@ describe('integration tests:', function () {
         vorpalHistory.exec('command2');
       });
 
-      after(function (done) {
+      after((done) => {
         // Clean up history
         vorpalHistory.cmdHistory.clear();
 
         // Clean up directory created to store history
-        fs.rmdir(UNIT_TEST_STORAGE_PATH, function () {
+        fs.rmdir(UNIT_TEST_STORAGE_PATH, () => {
           done();
         });
       });
 
-      it('should be able to get history', function () {
+      it('should be able to get history', () => {
         vorpalHistory.session.getHistory('up').should.equal('command2');
         vorpalHistory.session.getHistory('up').should.equal('command1');
         vorpalHistory.session.getHistory('down').should.equal('command2');
         vorpalHistory.session.getHistory('down').should.equal('');
       });
 
-      it('should keep separate history for mode', function () {
+      it('should keep separate history for mode', () => {
         vorpalHistory.cmdHistory.enterMode();
         vorpalHistory.exec('command3');
 
@@ -614,8 +602,8 @@ describe('integration tests:', function () {
         vorpalHistory.session.getHistory('down').should.equal('');
       });
 
-      it('should persist history', function () {
-        var vorpalHistory2 = new Vorpal();
+      it('should persist history', () => {
+        const vorpalHistory2 = new Vorpal();
         vorpalHistory2.historyStoragePath(UNIT_TEST_STORAGE_PATH);
         vorpalHistory2.history('unit_test');
         vorpalHistory2.session.getHistory('up').should.equal('command2');
@@ -624,7 +612,7 @@ describe('integration tests:', function () {
         vorpalHistory2.session.getHistory('down').should.equal('');
       });
 
-      it('should ignore consecutive duplicates', function () {
+      it('should ignore consecutive duplicates', () => {
         vorpalHistory.exec('command2');
         vorpalHistory.session.getHistory('up').should.equal('command2');
         vorpalHistory.session.getHistory('up').should.equal('command1');
@@ -632,7 +620,7 @@ describe('integration tests:', function () {
         vorpalHistory.session.getHistory('down').should.equal('');
       });
 
-      it('should always return last executed command immediately after', function () {
+      it('should always return last executed command immediately after', () => {
         vorpalHistory.exec('command1');
         vorpalHistory.exec('command2');
         vorpalHistory.session.getHistory('up').should.equal('command2');
@@ -642,37 +630,36 @@ describe('integration tests:', function () {
       });
     });
 
-    describe('cancel', function () {
-      var longRunningCommand;
-      before(function () {
+    describe('cancel', () => {
+      let longRunningCommand;
+      before(() => {
         longRunningCommand = vorpal
           .command('LongRunning', 'This command keeps running.')
           .action(function () {
-            var self = this;
-            self._cancelled = false;
-            var cancelInt = setInterval(function () {
-              if (self._cancelled) {
+            this._cancelled = false;
+            let cancelInt = setInterval(() => {
+              if (this._cancelled) {
                 // break off
                 clearInterval(cancelInt);
               }
             }, 1000);
-            var p = new BlueBirdPromise(function () {});
+            let p = new BlueBirdPromise(() => {});
             p.cancellable();
             return p;
           });
       });
-      it('should cancel promise', function (done) {
+      it('should cancel promise', (done) => {
         vorpal.exec('LongRunning')
-          .then(function () {
+          .then(() => {
             true.should.not.be.true;
             done();
-          }).catch(function (instance) {
+          }).catch((instance) => {
             instance._cancelled = true;
             done();
           });
         vorpal.session.cancelCommands();
       });
-      it('should call registered cancel function', function (done) {
+      it('should call registered cancel function', (done) => {
         longRunningCommand
           .cancel(function () {
             this._cancelled = true;
@@ -681,7 +668,7 @@ describe('integration tests:', function () {
         vorpal.exec('LongRunning');
         vorpal.session.cancelCommands();
       });
-      it('should be able to call cancel in action', function (done) {
+      it('should be able to call cancel in action', (done) => {
         vorpal
           .command('SelfCancel', 'This command cancels itself.')
           .action(function () {
@@ -694,7 +681,7 @@ describe('integration tests:', function () {
 
         vorpal.exec('SelfCancel');
       });
-      it('should handle event client_command_cancelled', function (done) {
+      it('should handle event client_command_cancelled', (done) => {
         vorpal.on('client_command_cancelled', function () {
           true.should.be.true;
           done();
@@ -708,20 +695,20 @@ describe('integration tests:', function () {
       });
     });
 
-    describe('events', function () {
-      it('should handle event command_registered', function (done) {
+    describe('events', () => {
+      it('should handle event command_registered', (done) => {
         vorpal.on('command_registered', function () {
           true.should.be.true; done();
         }).command('newMethod');
       });
-      it('should handle event client_keypress', function (done) {
+      it('should handle event client_keypress', (done) => {
         vorpal.on('client_keypress', function () {
           vorpal.hide();
           done();
         }).delimiter('').show()
           .ui._activePrompt.onKeypress({key: 'k'});
       });
-      it('should handle event client_prompt_submit', function (done) {
+      it('should handle event client_prompt_submit', (done) => {
         vorpal.on('client_prompt_submit', function (result) {
           result.should.equal('');
           vorpal.hide();
@@ -730,20 +717,20 @@ describe('integration tests:', function () {
           .show()
           .ui.submit('');
       });
-      it('should handle event client_command_executed', function (done) {
+      it('should handle event client_command_executed', (done) => {
         vorpal.on('client_command_executed', function () {
           true.should.be.true; done();
         });
         vorpal.exec('help');
       });
-      it('should handle event client_command_error', function (done) {
+      it('should handle event client_command_error', (done) => {
         vorpal.on('client_command_error', function () {
           true.should.be.true; done();
         });
         vorpal.exec('fail me plzz');
       });
-      it('should handle piped event client_command_error', function (done) {
-        var vorpal2 = new Vorpal();
+      it('should handle piped event client_command_error', (done) => {
+        let vorpal2 = new Vorpal();
         vorpal2.on('client_command_error', function () {
           true.should.be.true; done();
         })
@@ -755,30 +742,30 @@ describe('integration tests:', function () {
       });
     });
 
-    describe('local storage', function () {
-      it('should error if not initialized', function () {
-        (function () {
+    describe('local storage', () => {
+      it('should error if not initialized', () => {
+        (() => {
           vorpal.localStorage.setItem();
         }).should.throw();
-        (function () {
+        (() => {
           vorpal.localStorage.getItem();
         }).should.throw();
-        (function () {
+        (() => {
           vorpal.localStorage.removeItem();
         }).should.throw();
       });
 
-      it('should error if not passed a unique id', function () {
-        (function () {
+      it('should error if not passed a unique id', () => {
+        (() => {
           vorpal.localStorage();
         }).should.throw();
       });
 
-      it('should set and get items', function () {
-        var a = new Vorpal();
+      it('should set and get items', () => {try {
+        const a = new Vorpal();
         a.localStorage('foo');
         a.localStorage.setItem('cow', 'lick');
-        a.localStorage.getItem('cow').should.equal('lick');
+        a.localStorage.getItem('cow').should.equal('lick');} catch (e) { console.log(e); throw e;}
       });
     });
   });

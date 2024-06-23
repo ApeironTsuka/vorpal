@@ -1,8 +1,9 @@
-var Vantage = require('../../');
-var _ = require('lodash');
-var path = require('path');
+import Vantage from '../../lib/vorpal.js';
+import _ from 'lodash';
+import path from 'node:path';
+import url from 'node:url';
 
-module.exports = {
+const exports {
 
   instances: [],
 
@@ -13,21 +14,23 @@ module.exports = {
       ssl: false
     });
 
-    for (var i = 0; i < options.ports.length; ++i) {
-      var vorpal = new Vantage();
-      var port = options.ports[i];
+    for (let i = 0; i < options.ports.length; ++i) {
+      let vorpal = new Vantage();
+      let port = options.ports[i];
       vorpal
         .delimiter(port + ':')
-        .use(path.join(__dirname, '/server'))
+        .use(path.join(path.dirname(url.fileURLToPath(import.meta.url)), '/server'))
         .listen(port);
-      module.exports.instances.push(vorpal);
+      exports.instances.push(vorpal);
     }
 
-    cb(undefined, module.exports.instances);
-    return;
+    cb(undefined, exports.instances);
   },
 
   kill: function (what, cb) {
-    cb = cb || function () {};
+    cb = cb || () => {};
+    cb();
   }
 };
+export exports;
+export default exports;

@@ -1,7 +1,7 @@
-require('assert');
-require('should');
+import assert from 'assert';
+import should from 'should';
 
-module.exports = function (vorpal) {
+export const exports = (vorpal) => {
   vorpal
     .mode('repl', 'Enters REPL Mode.')
     .init(function (args, cb) {
@@ -9,7 +9,7 @@ module.exports = function (vorpal) {
       cb();
     })
     .action(function (command, cb) {
-      var res = eval(command);
+      let res = eval(command);
       this.log(res);
       cb(res);
     });
@@ -18,9 +18,8 @@ module.exports = function (vorpal) {
     .command('foo')
     .description('Should return \'bar\'.')
     .action(function () {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log('bar');
+      return new Promise((resolve) => {
+        this.log('bar');
         resolve();
       });
     });
@@ -33,7 +32,6 @@ module.exports = function (vorpal) {
 
   vorpal.command('prompt default <defaultValue>', 'action prompt')
     .action(function(args, cb) {
-
       return this.prompt([
         {
           type: 'input',
@@ -42,12 +40,11 @@ module.exports = function (vorpal) {
           default: args.defaultValue
         }
       ]);
-
     });
 
   vorpal.command('parse me <words>', 'Takes input and adds a reverse pipe to it.')
     .parse(function (str) {
-      return str + ' | reverse';
+      return `${str} | reverse`;
     })
     .action(function (args, cb) {
       this.log(args.words);
@@ -66,7 +63,7 @@ module.exports = function (vorpal) {
   vorpal.command('reverse [words]', 'append bar to stdin')
     .alias('r')
     .action(function (args, cb) {
-      var stdin = args.stdin || args.words;
+      let stdin = args.stdin || args.words;
       stdin = String(stdin).split('').reverse().join('');
       this.log(stdin);
       cb();
@@ -80,12 +77,12 @@ module.exports = function (vorpal) {
       if (args.word === 'throwme') {
         throw new Error('You said so...');
       }
-      return 'you said ' + args.word;
+      return `you said ${args.word}`;
     });
 
   vorpal.command('array [string]', 'convert string to an array.')
     .action(function (args, cb) {
-      var stdin = args.stdin || args.string;
+      let stdin = args.stdin || args.string;
       stdin = String(stdin).split('');
       this.log(stdin);
       cb();
@@ -95,9 +92,8 @@ module.exports = function (vorpal) {
     .command('fuzzy')
     .description('Should return \'wuzzy\'.')
     .action(function () {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log('wuzzy');
+      return new Promise((resolve) => {
+        this.log('wuzzy');
         resolve();
       });
     });
@@ -106,9 +102,8 @@ module.exports = function (vorpal) {
     .command('optional [arg]')
     .description('Should optionally return an arg.')
     .action(function (args) {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log(args.arg || '');
+      return new Promise((resolve) => {
+        this.log(args.arg || '');
         resolve();
       });
     });
@@ -203,7 +198,7 @@ module.exports = function (vorpal) {
     .command('fail me <arg>')
     .description('Must return an arg.')
     .action(function (args) {
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         if (args.arg === 'not') {
           resolve('we are happy');
         } else {
@@ -216,9 +211,8 @@ module.exports = function (vorpal) {
     .command('deep command [arg]')
     .description('Tests execution of deep command.')
     .action(function (args) {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log(args.arg);
+      return new Promise((resolve) => {
+        this.log(args.arg);
         resolve();
       });
     });
@@ -227,9 +221,8 @@ module.exports = function (vorpal) {
     .command('very deep command [arg]')
     .description('Tests execution of three-deep command.')
     .action(function (args) {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log(args.arg);
+      return new Promise((resolve) => {
+        this.log(args.arg);
         resolve();
       });
     });
@@ -238,9 +231,8 @@ module.exports = function (vorpal) {
     .command('count <number>')
     .description('Tests execution of three-deep command.')
     .action(function (args) {
-      var self = this;
-      return new Promise(function (resolve) {
-        self.log(args.number);
+      return new Promise((resolve) => {
+        this.log(args.number);
         resolve();
       });
     });
@@ -255,9 +247,8 @@ module.exports = function (vorpal) {
     .option('-i [param]', 'Test Option.')
     .description('Tests execution of three-deep command.')
     .action(function (args) {
-      var self = this;
-      return new Promise(function (resolve) {
-        var str = '';
+      return new Promise((resolve) => {
+        let str = '';
         str = (args.options.r === true) ? str + 'r' : str;
         str = (args.options.a === true) ? str + 'a' : str;
         str = (args.options.d === true) ? str + 'd' : str;
@@ -265,8 +256,9 @@ module.exports = function (vorpal) {
         str = (args.options.i === 'j') ? str + args.options.i : str;
         str = (args.options.sleep === 'well') ? str + args.options.sleep : str;
         str += (args.arg || '');
-        self.log(str);
+        this.log(str);
         resolve();
       });
     });
 };
+export default exports;

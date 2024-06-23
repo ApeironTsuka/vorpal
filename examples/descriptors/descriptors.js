@@ -1,7 +1,9 @@
 'use strict';
 
-var vorpal = require('./../../')();
-var chalk = vorpal.chalk;
+import Vorpal from '../../lib/vorpal.js';
+
+const vorpal = new Vorpal();
+const { chalk } = vorpal;
 
 vorpal
   .title(chalk.magenta('Vorpal'))

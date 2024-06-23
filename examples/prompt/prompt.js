@@ -1,12 +1,12 @@
 'use strict';
 
-var vorpal = require('./../../')();
+import Vorpal from '../../lib/vorpal.js';
+
+const vorpal = new Vorpal();
 
 vorpal.command('login', 'Login (u: root p: vorpal)')
   .action(function (args, cb) {
-    var self = this;
-
-    var promise = this.prompt([
+    const promise = this.prompt([
       {
         type: 'input',
         name: 'username',
@@ -21,12 +21,12 @@ vorpal.command('login', 'Login (u: root p: vorpal)')
       // You can use callbacks...
     });
 
-    promise.then(function(answers) {
+    promise.then((answers) => {
       // Or promises!
-      if (answers.username === 'root' && answers.password === 'vorpal') {
-        self.log('Successful login.');
+      if ((answers.username === 'root') && (answers.password === 'vorpal')) {
+        this.log('Successful login.');
       } else {
-        self.log('Login failed! Try username "root" and password "vorpal"!');
+        this.log('Login failed! Try username "root" and password "vorpal"!');
       }
       cb();
     });

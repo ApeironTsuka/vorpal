@@ -15,23 +15,21 @@
  * Module dependencies.
  */
 
-var Vorpal = require('./../../');
-var _ = require('lodash');
+import Vorpal from '../../lib/vorpal.js';
+import _ from 'lodash';
 
 /**
  * Variable declarations.
  */
 
-var banner = 'Welcome to the standalone Vorpal server.';
-var port = process.argv[2] || 5000;
-var delimiter = String('svr:' + port + '~$').white;
-var server;
-
-server = new Vorpal()
-  .banner(banner)
-  .delimiter(delimiter)
-  .listen(port)
-  .show();
+const banner = 'Welcome to the standalone Vorpal server.',
+      port = process.argv[2] || 5000,
+      delimiter = String('svr:' + port + '~$').white,
+      server = (new Vorpal())
+        .banner(banner)
+        .delimiter(delimiter)
+        .listen(port)
+        .show();
 
 /**
  * You use `vorpal.mode` the same way you use
@@ -66,8 +64,8 @@ server
   })
   .action(function (command, cb) {
     try {
-      var res = eval(command);
-      var log = (_.isString(res)) ? String(res).white : res;
+      const res = eval(command);
+      const log = _.isString(res) ? String(res).white : res;
       console.log(log);
       cb(res);
     } catch (e) {
