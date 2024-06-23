@@ -1,7 +1,6 @@
 # Vorpal
 
 
-[![Build Status](https://travis-ci.org/dthree/vorpal.svg)](https://travis-ci.org/dthree/vorpal/)
 <a href="https://www.npmjs.com/package/vorpal">
   <img src="https://img.shields.io/npm/dt/vorpal.svg" alt="NPM Downloads" />
 </a>
@@ -26,10 +25,6 @@
 ```
 
 Vorpal is Node's first framework for building interactive CLI applications. With a simple and powerful API, Vorpal opens the door to a new breed of rich, immersive CLI environments like [cash](https://github.com/dthree/cash) and [wat](https://github.com/dthree/wat).
-
-## Notice
-
-This is now an [OPEN Open Source](http://openopensource.org/) project. I am not able to invest a significant amount of time into maintaining Vorpal and so am looking for volunteers who would like to be active maintainers of the project. If you are interested, shoot me a note.
 
 ## Contents
 
@@ -58,7 +53,7 @@ Inspired by and based on [commander.js](https://www.npmjs.com/package/commander)
 
 Vorpal supports [community extensions](https://github.com/vorpaljs/awesome-vorpaljs), which empower it to do awesome things such as [piping commands to less](https://github.com/vorpaljs/vorpal-less), [importing commands live](https://github.com/vorpaljs/vorpal-use) or supporting a [built-in REPL](https://github.com/vorpaljs/vorpal-repl).
 
-Made with :heart: by [dthree](https://github.com/dthree).
+Made with :heart: by [dthree](https://github.com/dthree) and updated by ApeironTsuka.
 
 ## Getting Started
 
@@ -73,13 +68,12 @@ $ npm install vorpal --save
 Create a `.js` file and add the following:
 
 ```js
-const vorpal = require('vorpal')();
+import vorpal from 'vorpal';
 
 vorpal
   .command('foo', 'Outputs "bar".')
-  .action(function(args, callback) {
+  .action(async (args) => {
     this.log('bar');
-    callback();
   });
 
 vorpal
@@ -124,10 +118,8 @@ There's the basics. Once you get the hang of it, [follow this tutorial](http://d
 Questions? Use the `vorpal.js` StackOverflow tag for fast answers that help others, or jump into chat on Gitter.
 
 - [Stack Overflow](http://stackoverflow.com/questions/tagged/vorpal.js) 
-- [Gitter Chat](https://gitter.im/dthree/vorpal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) 
 - [Vorpal extensions](https://github.com/vorpaljs/awesome-vorpaljs#vorpal-extensions) 
 - [Projects made with Vorpal](https://github.com/vorpaljs/awesome-vorpaljs) 
-- [Follow @vorpaljs](https://twitter.com/vorpaljs) 
 
 ## [API](https://github.com/dthree/vorpal/wiki)
 
