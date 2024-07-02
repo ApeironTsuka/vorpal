@@ -335,28 +335,32 @@ describe('help menu', () => {
   const shortFixture = 'Twas brillig and the slithy toves.';
   let help;
 
-  before(() => {
+  /*before(() => {
     help = new Vorpal();
     help.command('foo [args...]')
       .action(function (args, cb) {
         return args;
       });
   });
+  after(() => {
+    help.destroy();
+  });*/
 
-  it.skip('show help on an invalid command', () => {
+  /*it.skip('show help on an invalid command', () => {
     stdout = '';
     mute();
-    const fixture = '\n  Invalid Command. Showing Help:\n\n  Commands:\n\n    help [command...]  Provides help for a given command.\n    exit               Exits application.\n    foo [args...]      \n\n\n';
-    help.execSync('cows')
+    const fixture = '\n  Invalid Command. Showing Help:\n\n  Commands:\n\n    help [command...] Provides help for a given command.\n    exit              Exits application.\n    foo [args...]     \n\n';
+    help.execSync('cows');
     unmute();
     stdout.should.equal(fixture);
-  });
+  });*/
 });
 
 describe('descriptors', () => {
   let instance;
 
   beforeEach(() => {
+    if (instance) { instance.destroy(); }
     instance = new Vorpal();
   });
 
@@ -378,5 +382,10 @@ describe('descriptors', () => {
   it('sets the banner', () => {
     instance.banner('VORPAL');
     assert.equal(instance._banner, 'VORPAL');
+  });
+});
+describe('cleanup', () => {
+  it('cleanup', () => {
+    vorpal.destroy();
   });
 });

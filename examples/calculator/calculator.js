@@ -1,8 +1,8 @@
 'use strict';
 
 import Vorpal from '../../lib/vorpal.js';
-import less from 'vorpal-less';
-import repl from 'vorpal-repl';
+import less from '@ApeironTsuka/vorpal-less';
+import repl from '@ApeironTsuka/vorpal-repl';
 
 const vorpal = new Vorpal();
 

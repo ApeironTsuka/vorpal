@@ -36,8 +36,8 @@
     "bluebird": "^3.1.1",
     "mocha": "^10.4.0",
     "should": "^13.2.3",
-    "vorpal-less": "0.0.13",
-    "vorpal-repl": "^1.1.8",
+    "@ApeironTsuka/vorpal-less": "0.1.0",
+    "@ApeironTsuka/vorpal-repl": "^1.2.0",
     "xo": "^0.58.0"
   },
   "dependencies": {

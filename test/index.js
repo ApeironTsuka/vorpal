@@ -47,4 +47,9 @@ describe('vorpal', () => {
       })
     });
   });
+  describe('cleanup', () => {
+    it('cleanup', () => {
+      vorpal.destroy();
+    });
+  });
 });

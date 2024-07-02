@@ -238,6 +238,10 @@ describe('integration tests:', () => {
         vorpal.ui.detach(parent);
       });
 
+      after(() => {
+        parent.destroy();
+      });
+
       it('should show the default value', (done) => {
         const execPromise = vorpal.exec('prompt default myawesomeproject');
         vorpal.ui.inquirerStdout.join('\n').should.containEql('(myawesomeproject)');
@@ -517,9 +521,9 @@ describe('integration tests:', () => {
         });
       });
 
-      it.skip('should show subcommand help on invalid subcommand', (done) => {
+      it('should show subcommand help on invalid subcommand', (done) => {
         exec('very complicated', done, () => {
-          stdout().should.containEql('very complicated deep *');
+          stdout().should.containEql('very complicated deep');
           done();
         });
       });
@@ -572,6 +576,7 @@ describe('integration tests:', () => {
       after((done) => {
         // Clean up history
         vorpalHistory.cmdHistory.clear();
+        vorpalHistory.destroy();
 
         // Clean up directory created to store history
         fs.rmdir(UNIT_TEST_STORAGE_PATH, () => {
@@ -610,6 +615,7 @@ describe('integration tests:', () => {
         vorpalHistory2.session.getHistory('up').should.equal('command1');
         vorpalHistory2.session.getHistory('down').should.equal('command2');
         vorpalHistory2.session.getHistory('down').should.equal('');
+        vorpalHistory2.destroy();
       });
 
       it('should ignore consecutive duplicates', () => {
@@ -739,6 +745,7 @@ describe('integration tests:', () => {
           cb('failed');
         });
         vorpal2.exec('help | fail | help');
+        vorpal2.destroy();
       });
     });
 
@@ -761,12 +768,18 @@ describe('integration tests:', () => {
         }).should.throw();
       });
 
-      it('should set and get items', () => {try {
+      it('should set and get items', () => {
         const a = new Vorpal();
         a.localStorage('foo');
         a.localStorage.setItem('cow', 'lick');
-        a.localStorage.getItem('cow').should.equal('lick');} catch (e) { console.log(e); throw e;}
+        a.localStorage.getItem('cow').should.equal('lick');
+        a.destroy();
       });
+    });
+  });
+  describe('cleanup', () => {
+    it('cleanup', () => {
+      vorpal.destroy();
     });
   });
 });

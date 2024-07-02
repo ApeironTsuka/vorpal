@@ -48,3 +48,8 @@ describe('session._autocomplete', () => {
     assert.equal(result[3], "definitop");
   });
 });
+describe('cleanup', () => {
+  it('cleanup', () => {
+    vorpal.destroy();
+  });
+});
