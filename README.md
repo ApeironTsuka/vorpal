@@ -53,7 +53,7 @@ Inspired by and based on [commander.js](https://www.npmjs.com/package/commander)
 
 Vorpal supports [community extensions](https://github.com/vorpaljs/awesome-vorpaljs), which empower it to do awesome things such as [piping commands to less](https://github.com/vorpaljs/vorpal-less), [importing commands live](https://github.com/vorpaljs/vorpal-use) or supporting a [built-in REPL](https://github.com/vorpaljs/vorpal-repl).
 
-Made with :heart: by [dthree](https://github.com/dthree) and updated by ApeironTsuka.
+Made with :heart: by [dthree](https://github.com/dthree) and updated by [ApeironTsuka](https://github.com/ApeironTsuka).
 
 ## Getting Started
 
@@ -121,61 +121,61 @@ Questions? Use the `vorpal.js` StackOverflow tag for fast answers that help othe
 - [Vorpal extensions](https://github.com/vorpaljs/awesome-vorpaljs#vorpal-extensions) 
 - [Projects made with Vorpal](https://github.com/vorpaljs/awesome-vorpaljs) 
 
-## [API](https://github.com/dthree/vorpal/wiki)
+## [API](https://github.com/ApeironTsuka/vorpal/wiki)
 
-##### [Command](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command)
-- [`vorpal.command`](https://github.com/dthree/vorpal/wiki/api-%7C-vorpal.command#vorpalcommandcommand-description)
-- [`command.description`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commanddescriptionstring)
-- [`command.alias`](https://github.com/dthree/vorpal/wiki/api-%7C-vorpal.command#commandaliasname-names)
-- [`command.parse`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandparseparsefunction)
-- [`command.option`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandoptionstring-description)
-- [`command.hidden`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandhidden)
-- [`command.remove`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandremove)
-- [`command.help`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandhelp)
-- [`command.autocomplete`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandautocompletearray-or-object-or-function)
-- [`command.action`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandactionfunction)
-- [`command.cancel`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.command#commandcancelfunction)
+##### [Command](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command)
+- [`vorpal.command`](https://github.com/ApeironTsuka/vorpal/wiki/api-%7C-vorpal.command#vorpalcommandcommand-description)
+- [`command.description`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commanddescriptionstring)
+- [`command.alias`](https://github.com/ApeironTsuka/vorpal/wiki/api-%7C-vorpal.command#commandaliasname-names)
+- [`command.parse`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandparseparsefunction)
+- [`command.option`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandoptionstring-description)
+- [`command.hidden`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandhidden)
+- [`command.remove`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandremove)
+- [`command.help`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandhelp)
+- [`command.autocomplete`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandautocompletearray-or-object-or-function)
+- [`command.action`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandactionfunction)
+- [`command.cancel`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.command#commandcancelfunction)
 
-##### [Mode](https://github.com/dthree/vorpal/wiki/API-|-vorpal.mode)
-- [`vorpal.mode`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal.mode#vorpalmodecommand-description)
-- [`mode.delimiter`](https://github.com/dthree/vorpal/wiki/API-|-vorpal.mode#modedelimiterstring)
-- [`mode.init`](https://github.com/dthree/vorpal/wiki/API-|-vorpal.mode#modeinitfunction)
-- [`mode.action`](https://github.com/dthree/vorpal/wiki/API-|-vorpal.mode#modeactionfunction)
+##### [Mode](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal.mode)
+- [`vorpal.mode`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal.mode#vorpalmodecommand-description)
+- [`mode.delimiter`](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal.mode#modedelimiterstring)
+- [`mode.init`](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal.mode#modeinitfunction)
+- [`mode.action`](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal.mode#modeactionfunction)
 
-##### [Catch](https://github.com/dthree/vorpal/wiki/API-|-vorpal.catch)
-- [`vorpal.catch`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal.catch#catchcommand-description)
+##### [Catch](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal.catch)
+- [`vorpal.catch`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal.catch#catchcommand-description)
 
-##### [CommandInstance](https://github.com/dthree/vorpal/wiki/API-|-CommandInstance)
-- [`commandInstance.log`](https://github.com/dthree/vorpal/wiki/API-%7C-CommandInstance#commandinstancelogstring-strings)
-- [`commandInstance.prompt`](https://github.com/dthree/vorpal/wiki/API-%7C-CommandInstance#commandinstancepromptobject-callback)
-- [`commandInstance.delimiter`](https://github.com/dthree/vorpal/wiki/API-%7C-CommandInstance#commandinstancedelimiterstring)
+##### [CommandInstance](https://github.com/ApeironTsuka/vorpal/wiki/API-|-CommandInstance)
+- [`commandInstance.log`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-CommandInstance#commandinstancelogstring-strings)
+- [`commandInstance.prompt`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-CommandInstance#commandinstancepromptobject-callback)
+- [`commandInstance.delimiter`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-CommandInstance#commandinstancedelimiterstring)
 
-##### [UI](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui)
-- [`ui.delimiter`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uidelimitertext)
-- [`ui.input`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiinputtext)
-- [`ui.imprint`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiimprint)
-- [`ui.submit`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uisubmittext)
-- [`ui.cancel`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uicancel)
-- [`ui.imprint`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiimprint)
-- [`ui.redraw`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiredrawtext-text)
-- [`ui.redraw.clear`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiredrawclear)
-- [`ui.redraw.done`](https://github.com/dthree/vorpal/wiki/api-|-vorpal.ui#uiredrawdone)
+##### [UI](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui)
+- [`ui.delimiter`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uidelimitertext)
+- [`ui.input`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiinputtext)
+- [`ui.imprint`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiimprint)
+- [`ui.submit`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uisubmittext)
+- [`ui.cancel`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uicancel)
+- [`ui.imprint`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiimprint)
+- [`ui.redraw`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiredrawtext-text)
+- [`ui.redraw.clear`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiredrawclear)
+- [`ui.redraw.done`](https://github.com/ApeironTsuka/vorpal/wiki/api-|-vorpal.ui#uiredrawdone)
 
-##### [Vorpal](https://github.com/dthree/vorpal/wiki/API-|-vorpal)
-- [`.parse`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalparseargv-options)
-- [`.delimiter`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpaldelimiterstring)
-- [`.show`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalshow)
-- [`.find`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalfindstring)
-- [`.exec`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalexeccommand-callback)
-- [`.execSync`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalexecsynccommand-options)
-- [`.log`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpallogstring-strings)
-- [`.history`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalhistoryid)
-- [`.localStorage`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpallocalstorageid)
-- [`.help`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalhelpfunction)
-- [`.pipe`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpalpipefunction)
-- [`.use`](https://github.com/dthree/vorpal/wiki/API-%7C-vorpal#vorpaluseextension)
+##### [Vorpal](https://github.com/ApeironTsuka/vorpal/wiki/API-|-vorpal)
+- [`.parse`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalparseargv-options)
+- [`.delimiter`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpaldelimiterstring)
+- [`.show`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalshow)
+- [`.find`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalfindstring)
+- [`.exec`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalexeccommand-callback)
+- [`.execSync`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalexecsynccommand-options)
+- [`.log`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpallogstring-strings)
+- [`.history`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalhistoryid)
+- [`.localStorage`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpallocalstorageid)
+- [`.help`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalhelpfunction)
+- [`.pipe`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpalpipefunction)
+- [`.use`](https://github.com/ApeironTsuka/vorpal/wiki/API-%7C-vorpal#vorpaluseextension)
 
-##### [Events](https://github.com/dthree/vorpal/wiki/Docs-%7C-Events)
+##### [Events](https://github.com/ApeironTsuka/vorpal/wiki/Docs-%7C-Events)
 
 
 ## Extensions
@@ -183,13 +183,13 @@ Questions? Use the `vorpal.js` StackOverflow tag for fast answers that help othe
 You can build your own Vorpal commands and extensions.
 
 - [List of awesome extensions](https://github.com/vorpaljs/awesome-vorpaljs#vorpal-extensions)
-- [Building your own extension](https://github.com/dthree/vorpal/wiki/Docs-%7C-Creating-Extensions)
+- [Building your own extension](https://github.com/ApeironTsuka/vorpal/wiki/Docs-%7C-Creating-Extensions)
 
 
-## [FAQ](https://github.com/dthree/vorpal/wiki/FAQ)
+## [FAQ](https://github.com/ApeironTsuka/vorpal/wiki/FAQ)
 
-- [What is an "immersive CLI app?"](https://github.com/dthree/vorpal/wiki/FAQ#what-is-an-immersive-cli-app)
-- [Wasn't this called Vantage?](https://github.com/dthree/vorpal/wiki/FAQ#uh-wasnt-this-called-vantage)
+- [What is an "immersive CLI app?"](https://github.com/ApeironTsuka/vorpal/wiki/FAQ#what-is-an-immersive-cli-app)
+- [Wasn't this called Vantage?](https://github.com/ApeironTsuka/vorpal/wiki/FAQ#uh-wasnt-this-called-vantage)
 
 
 ## Why Vorpal?
@@ -207,7 +207,6 @@ Lewis Carroll, Jabberwocky
 ##### Life Goals:
 
 - <s>Build a popular framework based on the [Jabberwocky](https://en.wikipedia.org/wiki/Jabberwocky) poem.</s>
-
 
 ## License
 
